@@ -1,0 +1,5 @@
+{
+    "testServer": "testing_guild_id",
+    "clientId": "bot_user_id",
+    "devs": ["developer_user_id"]
+}
