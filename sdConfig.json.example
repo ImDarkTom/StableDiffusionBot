@@ -1,5 +1,35 @@
 {
     "baseUrl": "http://localhost",
     "port": "7860",
-    "defaultNegativePrompt": "(low quality, worst quality:1.4)"
+    "defaultNegativePrompt": "(low quality, worst quality:1.4)",
+    "cfg_choices": [
+        {
+            "name": "Default",
+            "value": 7,
+            "default": true
+        },
+        {
+            "name": "High",
+            "value": 4
+        },
+        {
+            "name": "Low",
+            "value": 10
+        }
+    ],
+    "steps_choices": [
+        {
+            "name": "Default",
+            "value": 20,
+            "default": true
+        },
+        {
+            "name": "Enhanced",
+            "value": 35
+        },
+        {
+            "name": "High",
+            "value": 50
+        }
+    ]
 }
