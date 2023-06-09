@@ -1,7 +1,7 @@
 const { EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const base64ToBuffer = require("./base64ToBuffer");
 
-module.exports = async (data, settings = { saveBtn: true }) => {
+module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redoBtn: false }) => {
     const imageAttachment = new AttachmentBuilder(await base64ToBuffer(data.images[0]), { name: 'output.png'});
     const imageParams = JSON.parse(data.info); //imageData.parameters doesn't contain info such as seed or sampler_name.
 
@@ -23,6 +23,16 @@ module.exports = async (data, settings = { saveBtn: true }) => {
             .setStyle(ButtonStyle.Secondary)
 
         row.addComponents(saveBtn);
+    }
+
+    if (settings.upscaleBtn) {
+        const upscaleBtn = new ButtonBuilder()
+            .setCustomId('upscaleImg')
+            .setLabel('Upscale')
+            .setEmoji('🖼️')
+            .setStyle(ButtonStyle.Secondary)
+
+        row.addComponents(upscaleBtn);
     }
 
     if (settings.saveBtn) {

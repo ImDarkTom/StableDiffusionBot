@@ -5,12 +5,12 @@ const sdConfig = require('../../../sdConfig.json');
 
 module.exports = {
     id: 'redoImage',
-    ownerOnly: true,
+    ownerOnly: false,
 
     callback: async (client, interaction) => {
         interaction.deferReply();
 
-        const originalImageData = imageDataFromEmbed(interaction.message.embeds[0]);
+        const originalImageData = await imageDataFromEmbed(interaction.message.embeds[0]);
 
         const imageData = await sendRequest('txt2img', {
             prompt: originalImageData.prompt,
