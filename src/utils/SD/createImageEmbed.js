@@ -14,6 +14,7 @@ module.exports = async (data, settings = { saveBtn: true }) => {
 
     const embed = new EmbedBuilder()
             .setAuthor({name: `${imageParams.sampler_name} - ${imageParams.steps} - ${imageParams.cfg_scale}`})
+            .setTitle(imageParams.prompt)
             .setImage('attachment://output.png')
             .setFooter({text: `Seed: ${imageParams.seed}`})
             .setColor("#00e100")
