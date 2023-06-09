@@ -1,0 +1,4 @@
+.env
+botConfig.json
+sdConfig.json
+node_modules/

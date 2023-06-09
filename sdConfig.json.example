@@ -1,0 +1,5 @@
+{
+    "baseUrl": "http://localhost",
+    "port": "7860",
+    "defaultNegativePrompt": "(low quality, worst quality:1.4)"
+}

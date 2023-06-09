@@ -1,0 +1,7 @@
+{
+    "testServer": "testserverid",
+    "clientId": "botclientid",
+    "devs": [
+        "youruserid"
+    ]
+}
