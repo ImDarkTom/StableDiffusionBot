@@ -44,7 +44,8 @@ module.exports = {
 
         await interaction.editReply(await createImageEmbed(imageData, {
             saveBtn: true,
-            upscaleBtn: true
+            upscaleBtn: true,
+            redoBtn: true
         }));
     },
 };

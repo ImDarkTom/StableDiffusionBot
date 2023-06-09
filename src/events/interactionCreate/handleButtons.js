@@ -13,7 +13,8 @@ module.exports = async (client, interaction) => {
     if (!buttonObject) return;
 
     if (buttonObject.ownerOnly) {
-        if (interaction.user.id != interaction.message.author.id) {
+        console.log(interaction);
+        if (interaction.user.id != interaction.message.interaction.user.id) {
             interaction.reply({
                 content: 'Only the caller of the command can use this!',
                 ephemeral: true,

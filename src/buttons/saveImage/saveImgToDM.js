@@ -1,5 +1,3 @@
-const { ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
-
 module.exports = {
     id: 'saveImgToDM',
     ownerOnly: false,
