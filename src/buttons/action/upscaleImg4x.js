@@ -9,8 +9,6 @@ module.exports = {
     callback: async (client, interaction) => {
         await interaction.deferReply();
 
-        console.log(interaction);
-
         const originalMessageEmbed = (await interaction.channel.messages.fetch(interaction.message.content)).embeds[0];
         const originalImageData = await imageDataFromEmbed(originalMessageEmbed, true);
 
