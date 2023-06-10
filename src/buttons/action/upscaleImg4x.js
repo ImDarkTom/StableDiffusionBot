@@ -29,6 +29,6 @@ module.exports = {
             saveBtn: true,
             upscaleBtn: false,
             redoBtn: false
-        }));
+        }, interaction.user, `Upscaled to ${originalImageData.width*4}x${originalImageData.height*4}`));
     },
 };

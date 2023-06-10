@@ -46,6 +46,6 @@ module.exports = {
             saveBtn: true,
             upscaleBtn: true,
             redoBtn: true
-        }));
+        }, interaction.user));
     },
 };
