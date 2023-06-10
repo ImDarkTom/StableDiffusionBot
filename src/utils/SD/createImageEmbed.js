@@ -33,6 +33,15 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
     if (botConfig.showImageAuthor) { embed.setAuthor({name: `${user.username}#${user.discriminator}`, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
 
     const row = new ActionRowBuilder()
+
+    if (settings.redoBtn) {
+        const redoBtn = new ButtonBuilder()
+            .setCustomId('redoImage')
+            .setLabel('Redo')
+            .setEmoji('🔁')
+            .setStyle(ButtonStyle.Primary)
+        row.addComponents(redoBtn);
+    }
     
     if (settings.saveBtn) {
         const saveBtn = new ButtonBuilder()
@@ -52,16 +61,6 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
             .setStyle(ButtonStyle.Secondary)
 
         row.addComponents(upscaleBtn);
-    }
-
-    if (settings.redoBtn) {
-        const redoBtn = new ButtonBuilder()
-            .setCustomId('redoImage')
-            .setLabel('Redo')
-            .setEmoji('🔁')
-            .setStyle(ButtonStyle.Primary)
-
-        row.addComponents(redoBtn);
     }
 
     return {embeds: [embed], files: [imageAttachment], components: [row]};
