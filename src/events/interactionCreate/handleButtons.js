@@ -5,15 +5,16 @@ module.exports = async (client, interaction) => {
     if (!interaction.isButton()) return;
 
     const localButtons = getLocalButtons();
+    const customId = interaction.customId.split('-');
 
     const buttonObject = localButtons.find(
-        (btn) => btn.id === interaction.customId
+        (btn) => btn.id === customId[0]
     );
 
     if (!buttonObject) return;
 
     if (buttonObject.ownerOnly) {
-        if (interaction.user.id != interaction.message.interaction.user.id) {
+        if (customId[1] != interaction.user.id) {
             interaction.reply({
                 content: 'Only the caller of the command can use this!',
                 ephemeral: true,

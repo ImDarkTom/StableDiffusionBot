@@ -4,10 +4,12 @@ const createImageEmbed = require("../../utils/SD/createImageEmbed");
 
 module.exports = {
     id: 'upscaleImg4x',
-    ownerOnly: false,
+    ownerOnly: true,
 
     callback: async (client, interaction) => {
         await interaction.deferReply();
+
+        interaction.message.delete();
 
         const originalMessageEmbed = (await interaction.channel.messages.fetch(interaction.message.content)).embeds[0];
         const originalImageData = await imageDataFromEmbed(originalMessageEmbed, true);
