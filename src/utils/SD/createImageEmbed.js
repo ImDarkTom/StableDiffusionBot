@@ -34,10 +34,27 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
             .setColor("#00bb00")
     } else {
         embed = new EmbedBuilder()
-            .setTitle(imageParams.prompt)
+            .addFields([
+                {
+                    name: "Seed",
+                    value: imageParams.seed.toString(),
+                    inline: true
+                },
+                {
+                    name: "Steps",
+                    value: imageParams.steps.toString(),
+                    inline: true
+                },
+                {
+                    name: "CFG SCale",
+                    value: imageParams.cfg_scale.toString(),
+                    inline: true
+                }
+            ])
+            .setTitle(`${context != "" ? `${context} - ` : ""}"${imageParams.prompt}"`)
             .setImage('attachment://output.png')
-            .setFooter({text: `Seed: ${imageParams.seed}`})
-            .setColor("#00e100")
+            .setFooter({text: imageParams.infotexts[0].match(/Model: ([^,]+)/)[1]})
+            .setColor("#00bb00")
     }
     
 
@@ -63,7 +80,7 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
         row.addComponents(upscaleBtn);
     }
 
-    if (settings.saveBtn) {
+    if (settings.redoBtn) {
         const redoBtn = new ButtonBuilder()
             .setCustomId('redoImage')
             .setLabel('Redo')
