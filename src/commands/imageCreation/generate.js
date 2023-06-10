@@ -35,7 +35,7 @@ module.exports = {
     callback: async (client, interaction) => {
         await interaction.deferReply();
 
-        const imageData = await sendRequest('txt2img', {
+        const imageData = await sendRequest('sdapi/v1/txt2img', {
             prompt: interaction.options.get('prompt').value,
             negative_prompt: sdConfig.defaultNegativePrompt,
             steps: interaction.options.get('steps')?.value || 20,

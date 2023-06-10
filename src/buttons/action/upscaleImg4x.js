@@ -14,7 +14,7 @@ module.exports = {
 
         interaction.message.delete();
 
-        const imageData = await sendRequest('img2img', {
+        const imageData = await sendRequest('sdapi/v1/img2img', {
             "init_images": [originalImageData.image], 
             "denoising_strength": 0.2,
             "prompt": originalImageData.prompt,

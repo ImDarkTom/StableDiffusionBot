@@ -12,7 +12,7 @@ module.exports = {
 
         const originalImageData = await imageDataFromEmbed(interaction.message.embeds[0]);
 
-        const imageData = await sendRequest('txt2img', {
+        const imageData = await sendRequest('sdapi/v1/txt2img', {
             prompt: originalImageData.prompt,
             negative_prompt: sdConfig.defaultNegativePrompt,
             steps: originalImageData.steps,
