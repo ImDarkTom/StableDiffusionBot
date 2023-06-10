@@ -9,10 +9,10 @@ module.exports = {
     callback: async (client, interaction) => {
         await interaction.deferReply();
 
-        interaction.message.delete();
-
         const originalMessageEmbed = (await interaction.channel.messages.fetch(interaction.message.content)).embeds[0];
         const originalImageData = await imageDataFromEmbed(originalMessageEmbed, true);
+
+        interaction.message.delete();
 
         const imageData = await sendRequest('img2img', {
             "init_images": [originalImageData.image], 
