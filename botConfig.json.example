@@ -4,5 +4,6 @@
     "devs": [
         "youruserid"
     ],
-    "showImageAuthor": true
+    "showImageAuthor": true,
+    "progressUpdateInterval": 2500
 }
