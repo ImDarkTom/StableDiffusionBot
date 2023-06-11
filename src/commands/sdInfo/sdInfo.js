@@ -1,6 +1,5 @@
-const { ApplicationCommandOptionType } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
 const sendRequest = require("../../utils/SD/sendRequest");
-const { EmbedBuilder } = require("@discordjs");
 
 module.exports = {
     name: 'sdinfo',
