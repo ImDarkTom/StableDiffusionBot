@@ -3,11 +3,13 @@ const imageDataFromEmbed = require('../../utils/SD/imageDataFromEmbed');
 const createImageEmbed = require("../../utils/SD/createImageEmbed");
 
 module.exports = {
-    id: 'upscaleImg4x',
+    id: 'upscaleImg',
     ownerOnly: true,
 
     callback: async (client, interaction) => {
         await interaction.deferReply();
+
+        const upscaleMultiplier = Number(interaction.customId.split('-')[2]);
 
         const originalMessageEmbed = (await interaction.channel.messages.fetch(interaction.message.content)).embeds[0];
         const originalImageData = await imageDataFromEmbed(originalMessageEmbed, true);
@@ -23,7 +25,7 @@ module.exports = {
             "cfg_scale": 7,
             "width": 64,
             "height": 64,
-            "script_args": ["", 512, 512, 8, 32, 64, 0.2, 16, 6, true, 1, false, 4, 0, 2, 512, 512, 4],
+            "script_args": ["", 512, 512, 8, 32, 64, 0.2, 16, 6, true, 1, false, 4, 0, 2, 512, 512, upscaleMultiplier],
             "script_name": "ultimate sd upscale"
         });
 
@@ -31,6 +33,6 @@ module.exports = {
             saveBtn: true,
             upscaleBtn: false,
             redoBtn: false
-        }, interaction.user, `Upscaled to ${originalImageData.width*4}x${originalImageData.height*4}`));
+        }, interaction.user, `Upscaled to ${originalImageData.width*upscaleMultiplier}x${originalImageData.height*upscaleMultiplier}`));
     },
 };

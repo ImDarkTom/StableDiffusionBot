@@ -1,20 +1,20 @@
 const { ButtonStyle, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 
 module.exports = {
-    id: 'upscaleImg',
+    id: 'upscaleImgMenu',
     ownerOnly: false,
 
     callback: async (client, interaction) => {
         const interactionMsg = interaction.message;
 
         const upscale2x = new ButtonBuilder()
-            .setCustomId(`upscaleImg2x-${interaction.user.id}`)
+            .setCustomId(`upscaleImg-${interaction.user.id}-2`)
             .setLabel('2x')
             .setEmoji('⬆️')
             .setStyle(ButtonStyle.Secondary)
 
         const upscale4x = new ButtonBuilder()
-            .setCustomId(`upscaleImg4x-${interaction.user.id}`)
+            .setCustomId(`upscaleImg-${interaction.user.id}-4`)
             .setLabel('4x')
             .setEmoji('⬆️')
             .setStyle(ButtonStyle.Secondary)
