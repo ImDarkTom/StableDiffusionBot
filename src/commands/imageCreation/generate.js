@@ -1,9 +1,8 @@
 const { ApplicationCommandOptionType } = require('discord.js');
 const sendRequest = require('../../utils/SD/sendRequest');
 const sdConfig = require('../../../sdConfig.json');
-const botConfig = require('../../../botConfig.json')
 const createImageEmbed = require('../../utils/SD/createImageEmbed');
-const getProgressEmbed = require('../../utils/SD/getProgressEmbed');
+const progressUpdater = require('../../utils/SD/progressUpdater');
 
 module.exports = {
     //deleted: true,
@@ -44,17 +43,9 @@ module.exports = {
             cfg_scale: interaction.options.get('cfg')?.value || 7
         });
 
-        const interval = setInterval( async () => {
-
-            interaction.editReply(await getProgressEmbed(interaction.user, "Generating... ", true));
-
-        }, botConfig.progressUpdateInterval);
-        
-        const imageData = await imagePromise;
-
-        clearInterval(interval);
-
-        const finishedData = await sendRequest('sdapi/v1/progress', {}, "get");
+        const progressFinish = await progressUpdater(imagePromise, interaction);
+        const finishedData = progressFinish[0];
+        const imageData = progressFinish[1];
 
         await interaction.editReply(await createImageEmbed(imageData, {
             cancelled: finishedData.state.interrupted,

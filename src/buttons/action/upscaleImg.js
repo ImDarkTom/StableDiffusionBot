@@ -1,13 +1,14 @@
 const sendRequest = require("../../utils/SD/sendRequest");
 const imageDataFromEmbed = require('../../utils/SD/imageDataFromEmbed');
 const createImageEmbed = require("../../utils/SD/createImageEmbed");
+const progressUpdater = require("../../utils/SD/progressUpdater");
 
 module.exports = {
     id: 'upscaleImg',
     ownerOnly: true,
 
     callback: async (client, interaction) => {
-        await interaction.deferReply();
+        await interaction.reply({content: "Waiting for Stable Diffusion..."});
 
         const upscaleMultiplier = Number(interaction.customId.split('-')[2]);
 
@@ -16,7 +17,7 @@ module.exports = {
 
         interaction.message.delete();
 
-        const imageData = await sendRequest('sdapi/v1/img2img', {
+        const imagePromise = sendRequest('sdapi/v1/img2img', {
             "init_images": [originalImageData.image], 
             "denoising_strength": 0.2,
             "prompt": originalImageData.prompt,
@@ -29,7 +30,12 @@ module.exports = {
             "script_name": "ultimate sd upscale"
         });
 
+        const progressFinish = await progressUpdater(imagePromise, interaction);
+        const finishedData = progressFinish[0];
+        const imageData = progressFinish[1];
+
         await interaction.editReply(await createImageEmbed(imageData, {
+            cancelled: finishedData.state.interrupted,
             saveBtn: true,
             upscaleBtn: false,
             redoBtn: false

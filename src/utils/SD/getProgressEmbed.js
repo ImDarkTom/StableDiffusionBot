@@ -4,7 +4,21 @@ const botConfig = require('../../../botConfig.json');
 const base64ToBuffer = require("./base64ToBuffer");
 
 module.exports =  async (user, context = "", addCancelButton = true) => {
-    const data = await sendRequest('sdapi/v1/progress?skip_current_image=false', {}, "get");
+    let data;
+
+    while (true) {
+        data = await sendRequest('sdapi/v1/progress?skip_current_image=false', {}, "get");
+
+        if ("progress" in data) {
+            break;
+        } else {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second timeout
+        }
+    }
+
+    if (data.current_image == null) { // Make better later
+        return {content: ""};
+    }
 
     //Embed
     const progress = Math.round(data.progress*100);
