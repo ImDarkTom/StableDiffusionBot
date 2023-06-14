@@ -14,7 +14,7 @@ module.exports = {
 
         const imageData = await sendRequest('sdapi/v1/txt2img', {
             prompt: originalImageData.prompt,
-            negative_prompt: sdConfig.defaultNegativePrompt,
+            negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
             steps: originalImageData.steps,
             cfg_scale: originalImageData.cfg_scale
         });

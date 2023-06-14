@@ -39,8 +39,8 @@ module.exports = {
         const imagePromise = sendRequest('sdapi/v1/txt2img', {
             prompt: interaction.options.get('prompt').value,
             negative_prompt: sdConfig.defaultNegativePrompt,
-            steps: interaction.options.get('steps')?.value || 20,
-            cfg_scale: interaction.options.get('cfg')?.value || 7
+            steps: interaction.options.get('steps')?.value || sdConfig.generationDefaults.defaultSteps,
+            cfg_scale: interaction.options.get('cfg')?.value || sdConfig.generationDefaults.defaultCfg
         });
 
         const progressFinish = await progressUpdater(imagePromise, interaction);

@@ -1,7 +1,11 @@
 {
     "baseUrl": "http://localhost",
     "port": "7860",
-    "defaultNegativePrompt": "(low quality, worst quality:1.4)",
+    "generationDefaults": {
+        "defaultNegativePrompt": "(low quality, worst quality:1.4)",
+        "defaultCfg": 7,
+        "defaultSteps": 20
+    },
     "cfg_choices": [
         {
             "name": "Default",
