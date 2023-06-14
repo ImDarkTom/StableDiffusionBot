@@ -1,4 +1,3 @@
-const { devs, testServer } = require('../../../botConfig.json');
 const getLocalButtons = require('../../utils/getLocalButtons');
 
 module.exports = async (client, interaction) => {
