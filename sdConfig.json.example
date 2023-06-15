@@ -3,6 +3,7 @@
     "port": "7860",
     "generationDefaults": {
         "defaultNegativePrompt": "(low quality, worst quality:1.4)",
+        "defaultModel": "v1-5-pruned",
         "defaultCfg": 7,
         "defaultSteps": 20
     },
