@@ -38,7 +38,7 @@ module.exports = {
 
         const imagePromise = sendRequest('sdapi/v1/txt2img', {
             prompt: interaction.options.get('prompt').value,
-            negative_prompt: sdConfig.defaultNegativePrompt,
+            negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
             steps: interaction.options.get('steps')?.value || sdConfig.generationDefaults.defaultSteps,
             cfg_scale: interaction.options.get('cfg')?.value || sdConfig.generationDefaults.defaultCfg
         });

@@ -17,7 +17,13 @@ module.exports =  async (user, context = "", addCancelButton = true) => {
     }
 
     if (data.current_image == null) { // Make better later
-        return {content: ""};
+        const embed = new EmbedBuilder()
+            .setColor('Yellow')
+            .setTitle('Starting...')
+
+        if (botConfig.showImageAuthor) { embed.setAuthor({name: `${user.username}#${user.discriminator}`, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
+
+        return {content: "", embeds: [embed]};
     }
 
     //Embed
