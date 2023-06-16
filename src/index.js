@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Client, IntentsBitField } = require('discord.js');
 const eventHandler = require('./handlers/eventHandler');
+const checkForIssues = require('./utils/checkForIssues');
 
 const client = new Client({
     intents: [
@@ -10,6 +11,10 @@ const client = new Client({
         IntentsBitField.Flags.MessageContent,
     ],
 });
+
+(async () => {
+    await checkForIssues();
+})();
 
 eventHandler(client);
 
