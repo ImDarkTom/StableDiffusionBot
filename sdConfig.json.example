@@ -36,5 +36,45 @@
             "name": "High",
             "value": 50
         }
+    ],
+    "upscalers": [
+        {
+            "name": "Lanczos",
+            "value": 1
+        },
+        {
+            "name": "Nearest",
+
+            "value": 2
+        },
+        {
+            "name": "ESRGAN_4x",
+            "value": 3
+        },
+        {
+            "name": "LDSR",
+            "value": 4
+        },
+        {
+            "name": "R-ESRGAN_4x+",
+            "value": 5,
+            "default": true
+        },
+        {
+            "name": "R-ESRGAN 4x+ Anime6B",
+            "value": 6
+        },
+        {
+            "name": "ScuNET GAN",
+            "value": 7
+        },
+        {
+            "name": "ScuNET PSNR",
+            "value": 8
+        },
+        {
+            "name": "SwinIR 4x",
+            "value": 9
+        }
     ]
 }
