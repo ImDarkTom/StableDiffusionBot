@@ -52,6 +52,15 @@ const client = new Client({
             console.warn("⚠ useUltimateSdUpscale is set to true but the extension was not detected, you can set this to false to use default sd upscaling instead.");
         }
     }
+
+    //Check for controlnet
+    axios.get(`${baseUrl}:${port}/controlnet/version`)
+        .then(response => {
+            console.log(`✅ ${response.status} ControlNet extension found.`);
+        })
+        .catch(error => {
+            console.warn(`⚠ ${error.code}: ControlNet was not found. The /controlnet command will not work.`)
+        })
 })();
 
 eventHandler(client);

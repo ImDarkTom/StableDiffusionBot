@@ -77,5 +77,19 @@
             "name": "SwinIR 4x",
             "value": 9
         }
+    ],
+    "controlnetModels": [
+        {
+            "name": "Depth",
+            "value": "control_v11f1p_sd15_depth [cfd03158]"
+        },
+        {
+            "name": "Canny",
+            "value": "control_v11p_sd15_canny [d14c016b]"
+        },
+        {
+            "name": "Openpose",
+            "value": "control_v11p_sd15_openpose [cab727d4]"
+        }
     ]
 }
