@@ -6,7 +6,8 @@
         "defaultNegativePrompt": "(low quality, worst quality:1.4)",
         "defaultModel": "v1-5-pruned",
         "defaultCfg": 7,
-        "defaultSteps": 20
+        "defaultSteps": 20,
+        "defaultUpscalerIndex": 5
     },
     "cfg_choices": [
         {
