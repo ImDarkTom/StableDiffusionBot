@@ -3,7 +3,7 @@ const { Client, IntentsBitField } = require('discord.js');
 const eventHandler = require('./handlers/eventHandler');
 const axios = require("axios");
 const sendRequest = require('./utils/SD/sendRequest');
-const { baseUrl, port } = require('../sdConfig.json');
+const { baseUrl, port, useUltimateSdUpscale } = require('../sdConfig.json');
 
 const client = new Client({
     intents: [
@@ -41,6 +41,15 @@ const client = new Client({
     } catch (error) {
         if (error.response.data.error === "ValidationError") {
             console.warn("⚠ LyCORIS has been detected as an extension. This means that switching checkpoints will not work. Disabling the extension via the GUI will restore the ability to change checkpoints.")
+        }
+    }
+
+    //Check for Ultimate SD upscale
+    const scripts = await sendRequest('sdapi/v1/scripts', {}, "get");
+
+    if (scripts.img2img.indexOf("ultimate sd upscale") == -1) {
+        if (useUltimateSdUpscale) {
+            console.warn("⚠ useUltimateSdUpscale is set to true but the extension was not detected, you can set this to false to use default sd upscaling instead.");
         }
     }
 })();

@@ -1,6 +1,7 @@
 {
     "baseUrl": "http://localhost",
     "port": "7860",
+    "useUltimateSdUpscale": false,
     "generationDefaults": {
         "defaultNegativePrompt": "(low quality, worst quality:1.4)",
         "defaultModel": "v1-5-pruned",
