@@ -17,7 +17,7 @@ module.exports = {
         for (const model of modelsResponse) {
             modelList.push({
                 label: model.title,
-                description: model.hash,
+                description: model.hash ? model.hash : "Unknown hash",
                 value: model.model_name
             });
         }
