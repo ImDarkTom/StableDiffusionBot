@@ -3,15 +3,21 @@ const botConfig = require('../../../botConfig.json');
 const sendRequest = require("./sendRequest");
 
 module.exports = async (imagePromise, interaction) => {
-    const interval = setInterval( async () => {
+    let interval;
 
-        interaction.editReply(await getProgressEmbed(interaction.user, "Generating... ", true));
+    if (botConfig.progressUpdateInterval !== -1) {
+        interval = setInterval( async () => {
 
-    }, botConfig.progressUpdateInterval);
+            interaction.editReply(await getProgressEmbed(interaction.user, "Generating... ", true));
     
+        }, botConfig.progressUpdateInterval);
+    }
+
     const imageData = await imagePromise;
 
-    clearInterval(interval);
+    if (interval) {
+        clearInterval(interval);
+    }
 
     const finishedData = await sendRequest('sdapi/v1/progress', {}, "get");
 

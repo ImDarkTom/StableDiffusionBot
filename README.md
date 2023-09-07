@@ -62,6 +62,8 @@ Modify the `.env` file with your bot token and configure the `botConfig.json` fi
 
 sdConfig can but does not need to be modified if Stable Diffusion is using the default port.
 
+To disable live image previews you can set progressUpdateInterval in botConfig to -1.
+
 ### 4. Running the bot
 
 Once all previous steps have been completed, the bot can be ran with the `node .` command. After a few seconds you should see an output saying the bot is online.
