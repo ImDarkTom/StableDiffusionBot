@@ -35,15 +35,6 @@ const client = new Client({
             process.exit([1])
         })
 
-    //Check for Lyco extension, it breaks changing models
-    try {
-        await sendRequest('sdapi/v1/options', {}, "get");
-    } catch (error) {
-        if (error.response.data.error === "ValidationError") {
-            console.warn("⚠ LyCORIS has been detected as an extension. This means that switching checkpoints will not work. Disabling the extension via the GUI will restore the ability to change checkpoints.")
-        }
-    }
-
     //Check for Ultimate SD upscale
     const scripts = await sendRequest('sdapi/v1/scripts', {}, "get");
 
