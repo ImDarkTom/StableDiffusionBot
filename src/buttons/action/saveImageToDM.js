@@ -1,5 +1,5 @@
 module.exports = {
-    id: 'saveImgToDM',
+    id: 'saveImageToDM',
     ownerOnly: false,
 
     callback: async (client, interaction) => {

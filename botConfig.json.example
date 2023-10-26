@@ -5,5 +5,5 @@
         "youruserid"
     ],
     "showImageAuthor": true,
-    "progressUpdateInterval": 2500
+    "progressUpdateIntervalMs": 2500
 }

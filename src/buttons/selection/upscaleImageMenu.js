@@ -2,20 +2,20 @@ const { ButtonStyle, ButtonBuilder, ActionRowBuilder, StringSelectMenuBuilder } 
 const sdConfig = require("../../../sdConfig.json");
 
 module.exports = {
-    id: 'upscaleImgMenu',
+    id: 'upscaleImageMenu',
     ownerOnly: false,
 
     callback: async (client, interaction) => {
         const interactionMsg = interaction.message;
 
         const upscale2x = new ButtonBuilder()
-            .setCustomId(`upscaleImg-${interaction.user.id}-2`)
+            .setCustomId(`upscaleImage-${interaction.user.id}-2`)
             .setLabel('2x')
             .setEmoji('⬆️')
             .setStyle(ButtonStyle.Secondary)
 
         const upscale4x = new ButtonBuilder()
-            .setCustomId(`upscaleImg-${interaction.user.id}-4`)
+            .setCustomId(`upscaleImage-${interaction.user.id}-4`)
             .setLabel('4x')
             .setEmoji('⬆️')
             .setStyle(ButtonStyle.Secondary)

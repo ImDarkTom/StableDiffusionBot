@@ -13,7 +13,7 @@ module.exports = {
             .setStyle(ButtonStyle.Link)
 
         const saveToDM = new ButtonBuilder()
-            .setCustomId('saveImgToDM')
+            .setCustomId('saveImageToDM')
             .setLabel('Save to DM')
             .setEmoji('📥')
             .setStyle(ButtonStyle.Primary)

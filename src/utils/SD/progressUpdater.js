@@ -5,12 +5,12 @@ const sendRequest = require("./sendRequest");
 module.exports = async (imagePromise, interaction) => {
     let interval;
 
-    if (botConfig.progressUpdateInterval !== -1) {
+    if (botConfig.progressUpdateIntervalMs !== -1) {
         interval = setInterval( async () => {
 
             interaction.editReply(await getProgressEmbed(interaction.user, "Generating... ", true));
     
-        }, botConfig.progressUpdateInterval);
+        }, botConfig.progressUpdateIntervalMs);
     }
 
     const imageData = await imagePromise;

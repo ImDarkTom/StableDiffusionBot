@@ -56,7 +56,7 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
 
     if (settings.upscaleBtn && !cancelled) {
         const upscaleBtn = new ButtonBuilder()
-            .setCustomId('upscaleImgMenu')
+            .setCustomId('upscaleImageMenu')
             .setLabel('Upscale')
             .setEmoji('🖼️')
             .setStyle(ButtonStyle.Secondary)

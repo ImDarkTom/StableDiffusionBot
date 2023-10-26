@@ -5,7 +5,7 @@ const progressUpdater = require("../../utils/SD/progressUpdater");
 const sdConfig = require('../../../sdConfig.json');
 
 module.exports = {
-    id: 'upscaleImg',
+    id: 'upscaleImage',
     ownerOnly: true,
 
     callback: async (client, interaction) => {
