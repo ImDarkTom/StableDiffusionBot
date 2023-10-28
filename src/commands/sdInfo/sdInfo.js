@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require("discord.js");
 const sendRequest = require("../../utils/SD/sendRequest");
 
 module.exports = {
@@ -26,49 +26,61 @@ module.exports = {
     // deleted: Boolean,
 
     callback: async (client, interaction) => {
-        const subcommand = interaction.options._subcommand;
-        const embedColors = {
-            loras: 0xFF00FF,
-            hypernetworks: 0xFF4500
-        };
+        const subcommandName = interaction.options._subcommand;
 
-        let embed;
+        const select = new StringSelectMenuBuilder()
+            .setCustomId(`sdInfoDetailDropdown-${subcommandName}`)
+            .setPlaceholder("Select an item to see details.")
 
-        if (["loras", "hypernetworks"].includes(subcommand)) {
-            const data = await sendRequest(`sdapi/v1/${subcommand}`, {}, "get");
+        const responseData = await sendRequest(`sdapi/v1/${subcommandName}`, {}, "get");
 
-            embed = new EmbedBuilder()
-                .setColor(embedColors[subcommand])
-                .setTitle(`List of ${subcommand}`)
-                .setDescription(`Total ${subcommand}: ${data.length}.`)
+        switch (subcommandName) {
+            case "loras":
+                for (const item of responseData) {
+                    select.addOptions(
+                        new StringSelectMenuOptionBuilder()
+                            .setLabel(item.name)
+                            .setDescription(`${item.name}, ${item.alias}`)
+                            .setValue(`${item.name}||${item.alias}`)
+                    )
+                };
+                break;
 
-            for (const item of data) {
-                embed.addFields([{
-                    name: item.name,
-                    value: `\`<${subcommand == "lora" ? "lora" : "hypernet"}:${item.name}:1>\`${item?.alias && item.name != item.alias ? `\n\`<${subcommand == "lora" ? "lora" : "hypernet"}:${item.alias}:1>\``: ''}`,
-                    inline: false
-                }]);
-            };
+            case "hypernetworks":
+                for (const item of responseData) {
+                    const hypernetName = item.name;
+
+                    select.addOptions(
+                        new StringSelectMenuOptionBuilder()
+                            .setLabel(hypernetName)
+                            .setDescription(`<hypernet:${hypernetName}:1>`)
+                            .setValue(hypernetName)
+                    )
+                };
+                break;
+            
+            case "embeddings":
+                const embeddingNames = Object.keys(responseData.loaded);
+
+                for (const name of embeddingNames) {
+                    select.addOptions(
+                        new StringSelectMenuOptionBuilder()
+                            .setLabel(name)
+                            .setDescription(name)
+                            .setValue(name)
+                    )
+                };
+                
         }
 
-        if (subcommand == "embeddings") {
-            const data = await sendRequest(`sdapi/v1/embeddings`, {}, "get");
-            const hypernets = Object.keys(data.loaded);
+        const row = new ActionRowBuilder()
+                .addComponents(select);
 
-            embed = new EmbedBuilder()
-                .setColor(0x00FFFF)
-                .setTitle(`List of embeddings`)
-                .setDescription(`Total embeddings: ${hypernets.length}.`)
+        const embed = new EmbedBuilder()
+                .setColor("Orange")
+                .setTitle(`List of ${subcommandName}`)
+                .setDescription(`Total ${subcommandName}: ${select.options.length}`)
 
-            for (const item of hypernets) {
-                embed.addFields([{
-                    name: item,
-                    value: `\`${item}\``,
-                    inline: false
-                }]);
-            };
-        }
-
-        interaction.reply({content: "", embeds: [embed]});
+        interaction.reply({content: "", embeds: [embed], components: [row], ephemeral: true});
     },
 };
