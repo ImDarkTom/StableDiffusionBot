@@ -26,7 +26,7 @@ module.exports = {
         },
         {
             name: 'cfg',
-            description: "How much creative freedom when generating.",
+            description: "How close the image should be to the prompt.",
             required: false,
             type: ApplicationCommandOptionType.Integer,
             choices: sdConfig.cfg_choices

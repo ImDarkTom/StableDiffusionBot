@@ -3,7 +3,7 @@ const sendRequest = require("../../utils/SD/sendRequest");
 
 module.exports = {
     name: 'sdinfo',
-    description: 'Info on the Stable Diffusion instance.',
+    description: 'Get info on the Stable Diffusion instance.',
     // devOnly: Boolean,
     // testOnly: Boolean,
     options: [

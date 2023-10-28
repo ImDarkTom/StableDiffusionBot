@@ -10,7 +10,7 @@ const sharp = require('sharp');
 module.exports = {
     //deleted: true,
     name: 'controlnet',
-    description: 'Generates an image.',
+    description: 'Generates an image with ControlNet.',
     // devOnly: Boolean,
     // testOnly: Boolean,
     options: [
@@ -29,7 +29,7 @@ module.exports = {
         },
         {
             name: 'cn-image',
-            description: 'Image to be processed in controlnet.',
+            description: 'Image to be processed in ControlNet.',
             required: true,
             type: ApplicationCommandOptionType.Attachment,
         },
@@ -42,7 +42,7 @@ module.exports = {
         },
         {
             name: 'cfg',
-            description: "How much creative freedom when generating.",
+            description: "How close the image should be to the prompt.",
             required: false,
             type: ApplicationCommandOptionType.Integer,
             choices: cfg_choices
