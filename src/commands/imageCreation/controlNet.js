@@ -1,5 +1,6 @@
 const { ApplicationCommandOptionType } = require("discord.js");
 const sdConfig = require('../../../sdConfig.json');
+const { steps_choices, cfg_choices, extensionConfigs } = require('../../../sdConfig.json');
 const sendRequest = require("../../utils/SD/sendRequest");
 const progressUpdater = require('../../utils/SD/progressUpdater');
 const createImageEmbed = require('../../utils/SD/createImageEmbed');
@@ -24,7 +25,7 @@ module.exports = {
             description: 'Which ControlNet model to use.',
             required: true,
             type: ApplicationCommandOptionType.String,
-            choices: sdConfig.controlnetModels
+            choices: extensionConfigs.controlnet.controlnetModels
         },
         {
             name: 'cn-image',
@@ -37,18 +38,24 @@ module.exports = {
             description: "How much time to spend generating.",
             required: false,
             type: ApplicationCommandOptionType.Integer,
-            choices: sdConfig.steps_choices
+            choices: steps_choices
         },
         {
             name: 'cfg',
             description: "How much creative freedom when generating.",
             required: false,
             type: ApplicationCommandOptionType.Integer,
-            choices: sdConfig.cfg_choices
+            choices: cfg_choices
         }
     ],
 
     callback: async (client, interaction) => {
+
+        if (sdConfig.extensionConfigs.controlnet.enabled == false) {
+            await interaction.reply({content: "Controlnet is disabled, you can enable it in the `sdConfig.json` file."});
+            return;
+        }
+
         const cnAttachment = interaction.options.get('cn-image').attachment;
         
         if (["image/png", "image/jpg"].indexOf(cnAttachment.contentType) < 0) { 

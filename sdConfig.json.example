@@ -79,18 +79,35 @@
             "value": 9
         }
     ],
-    "controlnetModels": [
-        {
-            "name": "Depth",
-            "value": "control_v11f1p_sd15_depth [cfd03158]"
+    "extensionConfigs": {
+
+        "controlnet": {
+            "enabled": false,
+            "controlnetModels": [
+                {
+                    "name": "Depth",
+                    "value": "control_v11f1p_sd15_depth [cfd03158]"
+                },
+                {
+                    "name": "Canny",
+                    "value": "control_v11p_sd15_canny [d14c016b]"
+                },
+                {
+                    "name": "Inpaint",
+                    "value": "control_v11p_sd15_inpaint [ebff9138]"
+                },
+                {
+                    "name": "Openpose",
+                    "value": "control_v11p_sd15_openpose [cab727d4]"
+                }
+            ]
         },
-        {
-            "name": "Canny",
-            "value": "control_v11p_sd15_canny [d14c016b]"
-        },
-        {
-            "name": "Openpose",
-            "value": "control_v11p_sd15_openpose [cab727d4]"
+
+        "autoTlsHttps": {
+            "enabled": false,
+            "certFilePath": "path/to/webui.cert",
+            "keyFilePath": "path/to/webui.key",
+            "caFilePath": "path/to/webui.bundle"
         }
-    ]
+    }
 }
