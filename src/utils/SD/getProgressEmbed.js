@@ -21,7 +21,7 @@ module.exports =  async (user, context = "", addCancelButton = true) => {
             .setColor('Yellow')
             .setTitle('Starting...')
 
-        if (botConfig.showImageAuthor) { embed.setAuthor({name: `${user.username}#${user.discriminator}`, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
+        if (botConfig.showImageAuthor) { embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
 
         return {content: "", embeds: [embed]};
     }
@@ -40,7 +40,7 @@ module.exports =  async (user, context = "", addCancelButton = true) => {
         .setImage('attachment://progress.png')
         .setColor("Yellow")
 
-    if (botConfig.showImageAuthor) { embed.setAuthor({name: `${user.username}#${user.discriminator}`, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
+    if (botConfig.showImageAuthor) { embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
 
     //Buttons
     const row = new ActionRowBuilder();
