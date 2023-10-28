@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const sendRequest = require("../../utils/SD/sendRequest");
 
 module.exports = {
@@ -32,11 +32,44 @@ module.exports = {
             .setCustomId(`sdInfoDetailDropdown-${subcommandName}`)
             .setPlaceholder("Select an item to see details.")
 
+        const embed = new EmbedBuilder()
+            .setColor("Orange")
+            .setTitle(`List of ${subcommandName}`)
+
+        
         const responseData = await sendRequest(`sdapi/v1/${subcommandName}`, {}, "get");
+        let addPaginationButtons = false;
+
+        let totalPages;
+        let pageData;
+        let modelsCount;
 
         switch (subcommandName) {
             case "loras":
-                for (const item of responseData) {
+                const loraCount = responseData.length;
+                modelsCount = loraCount;
+
+                if (loraCount < 25) {
+                    for (const item of responseData) {
+                        select.addOptions(
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel(item.name)
+                                .setDescription(`${item.name}, ${item.alias}`)
+                                .setValue(`${item.name}||${item.alias}`)
+                        )
+                    };
+                    break;
+                }
+                
+                totalPages = Math.ceil(loraCount/25);
+
+                embed
+                    .setFooter({ text: `loras.1.${totalPages}.${loraCount}` })
+                    .setTitle(`List of ${subcommandName} | Page 1 of ${totalPages}`)
+                
+                pageData = responseData.slice(0, 24);
+
+                for (const item of pageData) {
                     select.addOptions(
                         new StringSelectMenuOptionBuilder()
                             .setLabel(item.name)
@@ -44,10 +77,38 @@ module.exports = {
                             .setValue(`${item.name}||${item.alias}`)
                     )
                 };
+
+                addPaginationButtons = true;
                 break;
 
             case "hypernetworks":
-                for (const item of responseData) {
+                const hypernetsCount = responseData.length;
+                modelsCount = hypernetsCount;
+
+                if (hypernetsCount < 25) {
+                    for (const item of responseData) {
+                        const hypernetName = item.name;
+
+                        select.addOptions(
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel(hypernetName)
+                                .setDescription(`<hypernet:${hypernetName}:1>`)
+                                .setValue(hypernetName)
+                        )
+                    };
+                    break;
+
+                }
+
+                totalPages = Math.ceil(hypernetsCount/25);
+
+                embed
+                    .setFooter({ text: `hypernetworks.1.${totalPages}.${hypernetsCount}` })
+                    .setTitle(`List of ${subcommandName} | Page 1 of ${totalPages}`)
+                
+                pageData = responseData.slice(0, 24);
+
+                for (const item of pageData) {
                     const hypernetName = item.name;
 
                     select.addOptions(
@@ -57,10 +118,37 @@ module.exports = {
                             .setValue(hypernetName)
                     )
                 };
+
+                addPaginationButtons = true;
                 break;
+
             
             case "embeddings":
                 const embeddingNames = Object.keys(responseData.loaded);
+
+                const embeddingsCount = embeddingNames.length;
+                modelsCount = embeddingsCount;
+
+                if (embeddingsCount < 25) {
+                    for (const name of embeddingNames) {
+                        select.addOptions(
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel(name)
+                                .setDescription(name)
+                                .setValue(name)
+                        )
+                    };
+                    break;
+                    
+                }
+                
+                totalPages = Math.ceil(embeddingsCount/25);
+
+                embed
+                    .setFooter({ text: `hypernetworks.1.${totalPages}.${embeddingsCount}` })
+                    .setTitle(`List of ${subcommandName} | Page 1 of ${totalPages}`)
+                
+                pageData = embeddingNames.slice(0, 24);
 
                 for (const name of embeddingNames) {
                     select.addOptions(
@@ -70,17 +158,37 @@ module.exports = {
                             .setValue(name)
                     )
                 };
-                
+
+                addPaginationButtons = true;
+                break;
         }
 
-        const row = new ActionRowBuilder()
+        const selectionRow = new ActionRowBuilder()
                 .addComponents(select);
 
-        const embed = new EmbedBuilder()
-                .setColor("Orange")
-                .setTitle(`List of ${subcommandName}`)
-                .setDescription(`Total ${subcommandName}: ${select.options.length}`)
+        const componentsList = [];
+        componentsList.push(selectionRow)
 
-        interaction.reply({content: "", embeds: [embed], components: [row], ephemeral: true});
+        if (addPaginationButtons) {
+            const prevButton = new ButtonBuilder()
+                .setCustomId('sdInfoPagination-prev')
+                .setLabel('Prev. Page')
+                .setStyle(ButtonStyle.Secondary)
+                .setDisabled(true)
+            
+            const nextButton = new ButtonBuilder()
+                .setCustomId('sdInfoPagination-next')
+                .setLabel('Next Page')
+                .setStyle(ButtonStyle.Secondary)
+
+            const buttonRow = new ActionRowBuilder()
+                .addComponents(prevButton, nextButton);
+
+            componentsList.push(buttonRow);
+        }
+
+        embed.setDescription(`Total ${subcommandName}: ${modelsCount}`);
+
+        interaction.reply({content: "", embeds: [embed], components: componentsList, ephemeral: false});
     },
 };
