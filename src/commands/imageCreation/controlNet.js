@@ -1,11 +1,9 @@
-const { ApplicationCommandOptionType } = require("discord.js");
+const { ApplicationCommandOptionType, Client, ChatInputCommandInteraction } = require("discord.js");
 const sdConfig = require('../../../sdConfig.json');
 const { steps_choices, cfg_choices, extensionConfigs } = require('../../../sdConfig.json');
-const sendRequest = require("../../utils/SD/sendRequest");
-const progressUpdater = require('../../utils/SD/progressUpdater');
-const createImageEmbed = require('../../utils/SD/createImageEmbed');
 const axios = require('axios');
 const sharp = require('sharp');
+const generateImage = require("../../utils/SD/generateImage");
 
 module.exports = {
     //deleted: true,
@@ -49,67 +47,65 @@ module.exports = {
         }
     ],
 
+    /**
+     * 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
     callback: async (client, interaction) => {
-
         if (sdConfig.extensionConfigs.controlnet.enabled == false) {
             await interaction.reply({content: "Controlnet is disabled, you can enable it in the `sdConfig.json` file."});
             return;
         }
 
-        const cnAttachment = interaction.options.get('cn-image').attachment;
+        const passedAttachment = interaction.options.get('cn-image').attachment;
         
-        if (["image/png", "image/jpg"].indexOf(cnAttachment.contentType) < 0) { 
+        if (!["image/png", "image/jpg"].includes(passedAttachment.contentType)) { 
             //If not image
-            await interaction.reply({content: "The file you provided is not an image. Please provide a jpg/png file."});
+            await interaction.reply({content: "The file you provided is not an image. Please provide a jpg/png file.", ephemeral: true});
             return;
         }
 
-        await interaction.reply({content: "Waiting for Stable Diffusion..."});
+        const controlnetModel = interaction.options.get('cn-model').value;
+        let controlnetModule;
 
-        const cnModel = interaction.options.get('cn-model').value;
-        let cnModule;
-
-        for (const model of sdConfig.controlnetModels) {
-            if (model.value === cnModel) {
-                cnModule = model.name.toLowerCase();
+        for (const model of sdConfig.extensionConfigs.controlnet.controlnetModels) {
+            if (model.value === controlnetModel) {
+                controlnetModule = model.name.toLowerCase();
             }
         }
 
-        let cnImageB64;
+        let controlnetImageBase64;
 
-        await axios.get(cnAttachment.url, { responseType: 'arraybuffer' })
+        await axios.get(passedAttachment.url, { responseType: 'arraybuffer' })
             .then(response => response.data)
             .then(imageData => sharp(imageData).toBuffer())
             .then(buffer => buffer.toString('base64'))
-            .then(base64String => cnImageB64 = base64String)
+            .then(base64String => controlnetImageBase64 = base64String)
 
-        const imagePromise = sendRequest('sdapi/v1/txt2img', {
-            prompt: interaction.options.get('prompt').value,
-            negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
-            steps: interaction.options.get('steps')?.value || sdConfig.generationDefaults.defaultSteps,
-            cfg_scale: interaction.options.get('cfg')?.value || sdConfig.generationDefaults.defaultCfg,
-            alwayson_scripts: {
-                controlnet: {
-                    args: [
-                        {
-                            input_image: cnImageB64,
-                            module: cnModule,
-                            model: cnModel
-                        }
-                    ]
+        await generateImage(
+            'sdapi/v1/txt2img',
+            {
+                prompt: interaction.options.get('prompt').value,
+                negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
+                steps: interaction.options.get('steps')?.value || sdConfig.generationDefaults.defaultSteps,
+                cfg_scale: interaction.options.get('cfg')?.value || sdConfig.generationDefaults.defaultCfg,
+                alwayson_scripts: {
+                    controlnet: {
+                        args: [
+                            {
+                                input_image: controlnetImageBase64,
+                                module: controlnetModule,
+                                model: controlnetModel
+                            }
+                        ]
+                    }
                 }
+            },
+            interaction,
+            {
+                upscaleBtn: true,
+                redoBtn: true
             }
-        });
-
-        const progressFinish = await progressUpdater(imagePromise, interaction);
-        const finishedData = progressFinish[0];
-        const imageData = progressFinish[1];
-
-        await interaction.editReply(await createImageEmbed(imageData, {
-            cancelled: finishedData.state.interrupted,
-            saveBtn: true,
-            upscaleBtn: true,
-            redoBtn: true
-        }, interaction.user));
+        )
     },
 };

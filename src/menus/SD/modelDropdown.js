@@ -1,10 +1,15 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, Client, ChatInputCommandInteraction } = require('discord.js');
 const sendRequest = require('../../utils/SD/sendRequest');
 
 module.exports = {
     id: 'modelDropdown',
     ownerOnly: true,
 
+    /**
+     * 
+     * @param {Client} client 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
     callback: async (client, interaction) => {
         const modelValue = interaction.values[0];
         let embed;

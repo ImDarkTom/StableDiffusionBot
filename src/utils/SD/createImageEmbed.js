@@ -1,12 +1,27 @@
-const { EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, User } = require("discord.js");
 const base64ToBuffer = require("./base64ToBuffer");
 const botConfig = require('../../../botConfig.json')
 
-module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redoBtn: false, cancelled: false }, user, context = "") => {
-    const cancelled = settings.cancelled;
 
-    const imageAttachment = new AttachmentBuilder(await base64ToBuffer(data.images[0]), { name: 'output.png'});
-    const imageParams = JSON.parse(data.info); //imageData.parameters doesn't contain info such as seed or sampler_name.
+/**
+ * 
+ * @param {Object[]} data 
+ * @param {Object} settings 
+ * @param {boolean} settings.upscaleBtn Should the image be able to be upscaled?
+ * @param {boolean} settings.redoBtn Should the image be able to be redone?
+ * @param {string} settings.additionalTitleText Text to add alongside the prompt in the title.
+ * @param {User} user The user that requested the image.
+ * @returns {Promise<import("discord.js").MessagePayloadOption>}
+ */
+module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, additionalTitleText: ""}, user) => {
+    const additionalTitleText = settings.additionalTitleText;
+    const formattedAdditionalTitleText = additionalTitleText == undefined ? "" : `${additionalTitleText} - `;
+    
+    const [progressData, imageData] = data;
+    const cancelled = progressData.state.interrupted;
+
+    const imageAttachment = new AttachmentBuilder(await base64ToBuffer(imageData.images[0]), {name: 'output.png', description: ""});
+    const imageParams = JSON.parse(imageData.info); //imageData.parameters doesn't contain info such as seed or sampler_name.
 
     let embed = new EmbedBuilder()
         .addFields([
@@ -26,7 +41,7 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
                 inline: true
             }
         ])
-        .setTitle(`${cancelled ? "Cancelled - ": ""}${context != "" ? `${context} - ` : ""}"${imageParams.prompt}"`)
+        .setTitle(`${cancelled ? "Cancelled - ": ""}${formattedAdditionalTitleText}"${imageParams.prompt}"`)
         .setImage('attachment://output.png')
         .setFooter({ text: imageParams.infotexts[0].match(/Model: ([^,]+)/)[1] })
         .setColor(cancelled ? "#bb0000" : "#00bb00")
@@ -44,15 +59,13 @@ module.exports = async (data, settings = { saveBtn: true, upscaleBtn: true, redo
         row.addComponents(redoBtn);
     }
     
-    if (settings.saveBtn) {
-        const saveBtn = new ButtonBuilder()
-            .setCustomId('saveImage')
-            .setLabel('Save')
-            .setEmoji('💾')
-            .setStyle(ButtonStyle.Secondary)
+    const saveBtn = new ButtonBuilder()
+        .setCustomId('saveImage')
+        .setLabel('Save')
+        .setEmoji('💾')
+        .setStyle(ButtonStyle.Secondary)
 
-        row.addComponents(saveBtn);
-    }
+    row.addComponents(saveBtn);
 
     if (settings.upscaleBtn && !cancelled) {
         const upscaleBtn = new ButtonBuilder()
