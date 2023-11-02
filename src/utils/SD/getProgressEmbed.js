@@ -1,9 +1,16 @@
-const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, User } = require("discord.js");
 const sendRequest = require("./sendRequest");
 const botConfig = require('../../../botConfig.json');
 const base64ToBuffer = require("./base64ToBuffer");
 
-module.exports =  async (user, context = "", addCancelButton = true) => {
+/**
+ * 
+ * @param {User} user 
+ * @param {string} context Text to add alongside the progress embed.
+ * @param {boolean} addCancelButton 
+ * @returns {Promise<import("discord.js").MessagePayloadOption>}
+ */
+module.exports = async (user, context = "", addCancelButton = true) => {
     let data;
 
     while (true) {

@@ -1,13 +1,20 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+//@ts-check
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, ButtonInteraction } = require('discord.js');
 
 module.exports = {
     id: 'saveImage',
     ownerOnly: false,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ButtonInteraction} interaction 
+     */
+    callback: (_client, interaction) => {
         const interactionMsg = interaction.message;
 
         const downloadBtn = new ButtonBuilder()
+            //@ts-ignore
             .setURL(interaction.message.embeds[0].image.url)
             .setLabel('Download')
             .setStyle(ButtonStyle.Link)
@@ -21,6 +28,7 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(downloadBtn, saveToDM)
 
+        //@ts-ignore
         interaction.reply({content: interactionMsg.id, ephemeral: true, components: [row]});
     },
 };

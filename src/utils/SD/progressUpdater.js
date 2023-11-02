@@ -1,12 +1,12 @@
 const getProgressEmbed = require("./getProgressEmbed");
 const botConfig = require('../../../botConfig.json');
 const sendRequest = require("./sendRequest");
-const { ChatInputCommandInteraction } = require("discord.js");
+const { ChatInputCommandInteraction, ButtonInteraction } = require("discord.js");
 
 /**
  * 
  * @param {Promise} imagePromise Image to be generated promise.
- * @param {ChatInputCommandInteraction} interaction "Waiting for SD..." message.
+ * @param {ChatInputCommandInteraction | ButtonInteraction} interaction "Waiting for SD..." message.
  * @returns 
  */
 module.exports = async (imagePromise, interaction) => {

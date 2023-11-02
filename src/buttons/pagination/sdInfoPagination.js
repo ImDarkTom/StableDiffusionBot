@@ -1,11 +1,17 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, StringSelectMenuOptionBuilder, StringSelectMenuBuilder } = require("discord.js");
+//@ts-check
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, StringSelectMenuOptionBuilder, StringSelectMenuBuilder, Client, ButtonInteraction } = require("discord.js");
 const sendRequest = require("../../utils/SD/sendRequest");
 
 module.exports = {
     id: 'sdInfoPagination',
     ownerOnly: false,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ButtonInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         const direction = interaction.customId.split('-')[1];
 
         const originalMessage = interaction.message;
@@ -14,6 +20,7 @@ module.exports = {
 
         const [prevButton, nextButton] = originalComponents[1].components.map((originalButton) => new ButtonBuilder(originalButton.data));
 
+        //@ts-ignore
         const [modelType, page, totalPages, modelAmount] = originalEmbed.data.footer.text.split('.');
 
 
@@ -27,7 +34,7 @@ module.exports = {
 
         if (newPage == 1) {
             prevButton.setDisabled(true);
-        } else if (newPage == totalPages) {
+        } else if (newPage == Number(totalPages)) {
             nextButton.setDisabled(true);
         } else {
             prevButton.setDisabled(false);
@@ -71,7 +78,7 @@ module.exports = {
                 for (const item of hypernetsList) {
                     const hypernetName = item.name;
 
-                    select.addOptions(
+                    newSelectComponent.addOptions(
                         new StringSelectMenuOptionBuilder()
                             .setLabel(hypernetName)
                             .setDescription(`<hypernet:${hypernetName}:1>`)
@@ -86,7 +93,7 @@ module.exports = {
                 const embeddingsList = embeddingNames.slice(startIndex, endIndex);
 
                 for (const name of embeddingsList) {
-                    select.addOptions(
+                    newSelectComponent.addOptions(
                         new StringSelectMenuOptionBuilder()
                             .setLabel(name)
                             .setDescription(name)
@@ -99,6 +106,7 @@ module.exports = {
         const newSelectComponentRow = new ActionRowBuilder()
             .addComponents(newSelectComponent)
 
+        //@ts-ignore
         originalMessage.edit({content: "", embeds: [originalEmbed], components: [newSelectComponentRow, newButtonRow]});
 
         interaction.deferUpdate();

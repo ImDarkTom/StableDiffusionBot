@@ -1,12 +1,19 @@
+//@ts-check
 const imageDataFromEmbed = require("../../utils/SD/imageDataFromEmbed");
 const sdConfig = require('../../../sdConfig.json');
 const generateImage = require("../../utils/SD/generateImage");
+const { Client, ButtonInteraction } = require("discord.js");
 
 module.exports = {
     id: 'redoImage',
     ownerOnly: false,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ButtonInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         const originalImageData = await imageDataFromEmbed(interaction.message.embeds[0]);
 
         await generateImage(

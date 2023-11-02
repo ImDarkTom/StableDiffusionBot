@@ -1,6 +1,13 @@
+const { Client } = require('discord.js');
 const { devs, testServer } = require('../../../botConfig.json');
 const getLocalCommands = require('../../utils/getLocalCommands');
 
+/**
+ * 
+ * @param {Client} client 
+ * @param {import('discord.js').Interaction} interaction 
+ * @returns 
+ */
 module.exports = async (client, interaction) => {
     if (!interaction.isChatInputCommand()) return;
 

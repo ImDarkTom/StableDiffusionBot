@@ -1,5 +1,5 @@
 //@ts-check
-const { ChatInputCommandInteraction } = require('discord.js')
+const { ChatInputCommandInteraction, ButtonInteraction } = require('discord.js')
 const createImageEmbed = require("./createImageEmbed");
 const progressUpdater = require("./progressUpdater");
 const sendRequest = require("./sendRequest");
@@ -8,7 +8,7 @@ const sendRequest = require("./sendRequest");
  * 
  * @param {string} route The SD api route e.g "sdapi/v1/txt2img".
  * @param {object} requestData JSON data to be sent with axios request to api.
- * @param {ChatInputCommandInteraction} interaction Command interaction to reply to.
+ * @param {ChatInputCommandInteraction | ButtonInteraction} interaction Command interaction to reply to.
  * @param {object} embedData createImageEmbed parameters.
  */
 module.exports = async (route, requestData, interaction, embedData) => {

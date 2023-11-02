@@ -1,11 +1,16 @@
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, Client, StringSelectMenuInteraction } = require("discord.js");
 const sdConfig = require('../../../sdConfig.json');
 
 module.exports = {
     id: 'upscalerDropdown',
     ownerOnly: true,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {StringSelectMenuInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         const upscalerIndex = interaction.values[0];
         let upscalerName;
 

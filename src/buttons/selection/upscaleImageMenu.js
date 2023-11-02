@@ -1,11 +1,17 @@
-const { ButtonStyle, ButtonBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
+//@ts-check
+const { ButtonStyle, ButtonBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonInteraction, Client } = require("discord.js");
 const sdConfig = require("../../../sdConfig.json");
 
 module.exports = {
     id: 'upscaleImageMenu',
     ownerOnly: false,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ButtonInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         const interactionMsg = interaction.message;
 
         const upscale2x = new ButtonBuilder()
@@ -46,6 +52,7 @@ module.exports = {
         const selectionRow = new ActionRowBuilder()
             .addComponents(dropdown)
 
+        //@ts-ignore
         interaction.reply({content: `${interactionMsg.id}-${sdConfig.generationDefaults.defaultUpscalerIndex}`, ephemeral: false, components: [selectionRow, row]});
     },
 };

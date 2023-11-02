@@ -1,5 +1,12 @@
+const { Client } = require('discord.js');
 const getLocalSelectMenus = require('../../utils/getLocalSelectMenus');
 
+/**
+ * 
+ * @param {Client} client 
+ * @param {import('discord.js').Interaction} interaction 
+ * @returns 
+ */
 module.exports = async (client, interaction) => {
     if (!interaction.isStringSelectMenu()) return;
 

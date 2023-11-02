@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, Client, ChatInputCommandInteraction } = require("discord.js");
 const sdConfig = require('../../../sdConfig.json')
 const sendRequest = require("../../utils/SD/sendRequest");
 
@@ -9,7 +9,12 @@ module.exports = {
     // testOnly: Boolean,
     // deleted: Boolean,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         let modelList = [];
         let embed;
         const modelsResponse = await sendRequest('sdapi/v1/sd-models', {}, "get");

@@ -1,8 +1,13 @@
+const { Client } = require('discord.js');
 const { testServer } = require('../../../botConfig.json');
 const areCommandsDifferent = require('../../utils/areCommandsDifferent');
 const getApplicationCommands = require('../../utils/getApplicationCommands');
 const getLocalCommands = require('../../utils/getLocalCommands');
 
+/**
+ * 
+ * @param {Client} client 
+ */
 module.exports = async (client) => {
     try {
         const localCommands = getLocalCommands();

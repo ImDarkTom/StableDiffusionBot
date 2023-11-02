@@ -1,4 +1,5 @@
-const { EmbedBuilder, Client, ChatInputCommandInteraction } = require('discord.js');
+//@ts-check
+const { EmbedBuilder, Client, StringSelectMenuInteraction } = require('discord.js');
 const sendRequest = require('../../utils/SD/sendRequest');
 
 module.exports = {
@@ -7,10 +8,10 @@ module.exports = {
 
     /**
      * 
-     * @param {Client} client 
-     * @param {ChatInputCommandInteraction} interaction 
+     * @param {Client} _client 
+     * @param {StringSelectMenuInteraction} interaction 
      */
-    callback: async (client, interaction) => {
+    callback: async (_client, interaction) => {
         const modelValue = interaction.values[0];
         let embed;
 

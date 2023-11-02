@@ -1,12 +1,19 @@
 const { baseUrl, port } = require('../../../sdConfig.json');
 const axios = require('axios');
 
+/**
+ * 
+ * @param {string} path API URL path e.g 'sdapi/v1/txt2img'
+ * @param {object} data Data to be sent with request.
+ * @param {import('axios').Method} method 
+ * @returns {Promise<object>}
+ */
 module.exports = async (path, data = {}, method = "post") => {
-    if (method == "get") {
-        const response = await axios.get(`${baseUrl}:${port}/${path}`, data)
-        return response.data;
-    }
-    
-    const response = await axios.post(`${baseUrl}:${port}/${path}`, data)
+    const response = await axios({
+        method: method,
+        url: `${baseUrl}:${port}/${path}`,
+        data: data
+    });
+
     return response.data;
 };

@@ -1,5 +1,13 @@
+//@ts-check
+const { Client } = require('discord.js');
 const getLocalButtons = require('../../utils/getLocalButtons');
 
+/**
+ * 
+ * @param {Client} client 
+ * @param {import('discord.js').Interaction} interaction 
+ * @returns 
+ */
 module.exports = async (client, interaction) => {
     if (!interaction.isButton()) return;
 

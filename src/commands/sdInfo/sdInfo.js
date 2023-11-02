@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, ChatInputCommandInteraction } = require("discord.js");
 const sendRequest = require("../../utils/SD/sendRequest");
 
 module.exports = {
@@ -25,8 +25,13 @@ module.exports = {
     ],
     // deleted: Boolean,
 
-    callback: async (client, interaction) => {
-        const subcommandName = interaction.options._subcommand;
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
+        const subcommandName = interaction.options.getSubcommand();
 
         const select = new StringSelectMenuBuilder()
             .setCustomId(`sdInfoDetailDropdown-${subcommandName}`)

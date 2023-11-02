@@ -49,9 +49,11 @@ module.exports = {
 
     /**
      * 
+     * @param {Client} _client 
      * @param {ChatInputCommandInteraction} interaction 
+     * @returns 
      */
-    callback: async (client, interaction) => {
+    callback: async (_client, interaction) => {
         if (sdConfig.extensionConfigs.controlnet.enabled == false) {
             await interaction.reply({content: "Controlnet is disabled, you can enable it in the `sdConfig.json` file."});
             return;

@@ -1,16 +1,27 @@
+//@ts-check
 const imageDataFromEmbed = require('../../utils/SD/imageDataFromEmbed');
 const sdConfig = require('../../../sdConfig.json');
 const generateImage = require("../../utils/SD/generateImage");
+const { Client, ButtonInteraction } = require('discord.js');
 
 module.exports = {
     id: 'upscaleImage',
     ownerOnly: true,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ButtonInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         const messageContent = String(interaction.message.content).split('-');
 
         const upscaleMultiplier = Number(interaction.customId.split('-')[2]);
 
+        if (!interaction.channel) {
+            //Missing view channel intents
+            return;
+        }
         const originalMessageEmbed = (await interaction.channel.messages.fetch(messageContent[0])).embeds[0];
         const originalImageData = await imageDataFromEmbed(originalMessageEmbed, true);
 
@@ -18,7 +29,7 @@ module.exports = {
 
         let requestData;
 
-        if (sdConfig.useUltimateSDUpscale == true) {
+        if (sdConfig.useUltimateSdUpscale == true) {
             requestData = {
                 "init_images": [originalImageData.image], 
                 "denoising_strength": 0.2,

@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType } = require('discord.js');
+const { ApplicationCommandOptionType, Client, ChatInputCommandInteraction } = require('discord.js');
 const sdConfig = require('../../../sdConfig.json');
 const generateImage = require('../../utils/SD/generateImage');
 
@@ -31,7 +31,12 @@ module.exports = {
         }
     ],
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {ChatInputCommandInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         await generateImage(
             'sdapi/v1/txt2img',
             {

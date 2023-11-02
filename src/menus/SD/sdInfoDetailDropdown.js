@@ -1,10 +1,15 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, Client, StringSelectMenuInteraction } = require('discord.js');
 
 module.exports = {
     id: 'sdInfoDetailDropdown',
     ownerOnly: false,
 
-    callback: async (client, interaction) => {
+    /**
+     * 
+     * @param {Client} _client 
+     * @param {StringSelectMenuInteraction} interaction 
+     */
+    callback: async (_client, interaction) => {
         const modelType = interaction.customId.split('-')[1];
         const name = interaction.values[0];
 

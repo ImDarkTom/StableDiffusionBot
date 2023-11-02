@@ -1,5 +1,12 @@
 const axios = require("axios");
+const { Embed } = require("discord.js");
 
+/**
+ * 
+ * @param {Embed} embed 
+ * @param {boolean} returnImageB64 
+ * @returns {Promise<object>}
+ */
 module.exports = async(embed, returnImageB64 = false) => {
     const embedFields = embed.fields;
 
