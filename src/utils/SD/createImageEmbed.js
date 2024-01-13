@@ -46,7 +46,9 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
         .setFooter({ text: imageParams.infotexts[0].match(/Model: ([^,]+)/)[1] })
         .setColor(cancelled ? "#bb0000" : "#00bb00")
 
-    if (botConfig.showImageAuthor) { embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
+    if (botConfig.generation.showImageAuthor) { 
+        embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); 
+    }
     
     const row = new ActionRowBuilder()
 

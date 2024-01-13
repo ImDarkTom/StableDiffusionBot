@@ -12,12 +12,12 @@ const { ChatInputCommandInteraction, ButtonInteraction } = require("discord.js")
 module.exports = async (imagePromise, interaction) => {
     let interval;
 
-    if (botConfig.progressUpdateIntervalMs !== -1) {
+    if (botConfig.generation.progressUpdateIntervalMs !== -1) {
         interval = setInterval( async () => {
 
             interaction.editReply(await getProgressEmbed(interaction.user, "Generating... ", true));
     
-        }, botConfig.progressUpdateIntervalMs);
+        }, botConfig.generation.progressUpdateIntervalMs);
     }
 
     const imageData = await imagePromise;

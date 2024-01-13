@@ -28,7 +28,9 @@ module.exports = async (user, context = "", addCancelButton = true) => {
             .setColor('Yellow')
             .setTitle('Starting...')
 
-        if (botConfig.showImageAuthor) { embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
+        if (botConfig.generation.showImageAuthor) { 
+            embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); 
+        }
 
         return {content: "", embeds: [embed]};
     }
@@ -37,17 +39,22 @@ module.exports = async (user, context = "", addCancelButton = true) => {
     const progress = Math.round(data.progress*100);
     const progressBarCompletion = Math.ceil(progress/10);
 
-    const imageBuffer = await base64ToBuffer(data.current_image);
+    const imagePreviewFormat = botConfig.generation.imagePreviewFormat;
+    const previewImageFilename = 'progress.' + imagePreviewFormat;
 
-    const image = new AttachmentBuilder(imageBuffer, {name: 'progress.png'});
+    const imageBuffer = await base64ToBuffer(data.current_image, imagePreviewFormat);
+
+    const image = new AttachmentBuilder(imageBuffer, {name: previewImageFilename});
 
     const embed = new EmbedBuilder()
         .setTitle(`${context}${progress}%\n|${"▓".repeat(progressBarCompletion)}${"░".repeat(10 - progressBarCompletion)}|`)
         .setFooter({text: `ETA: ${data.eta_relative.toFixed(1)}s`})
-        .setImage('attachment://progress.png')
+        .setImage(`attachment://${previewImageFilename}`)
         .setColor("Yellow")
 
-    if (botConfig.showImageAuthor) { embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); }
+    if (botConfig.generation.showImageAuthor) { 
+        embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); 
+    }
 
     //Buttons
     const row = new ActionRowBuilder();

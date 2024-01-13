@@ -4,6 +4,9 @@
     "devs": [
         "youruserid"
     ],
-    "showImageAuthor": true,
-    "progressUpdateIntervalMs": 2500
+    "generation": {
+        "showImageAuthor": true,
+        "progressUpdateIntervalMs": 2500,
+        "imagePreviewFormat": "jpg"
+    }
 }
