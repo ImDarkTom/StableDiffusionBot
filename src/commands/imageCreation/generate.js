@@ -74,7 +74,7 @@ module.exports = {
                     name: 'cfg_scale',
                     description: "How much the model should stick to your prompt. Less = more creative, more = strictly follow prompt.",
                     required: false,
-                    type: ApplicationCommandOptionType.Integer
+                    type: ApplicationCommandOptionType.Number
                 },
                 {
                     name: 'sampler_name',

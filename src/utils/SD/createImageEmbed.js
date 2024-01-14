@@ -36,8 +36,18 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
                 inline: true
             },
             {
-                name: "CFG SCale",
+                name: "CFG Scale",
                 value: imageParams.cfg_scale.toString(),
+                inline: true
+            },
+            {
+                name: "Sampler Name",
+                value: imageParams.sampler_name.toString(),
+                inline: true
+            },
+            {
+                name: "Negative Prompt",
+                value: imageParams.negative_prompt.toString(),
                 inline: true
             }
         ])
