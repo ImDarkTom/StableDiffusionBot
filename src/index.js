@@ -42,9 +42,8 @@ const client = new Client({
 
                 } catch (err) {
                     if (err.code === 'ENOENT') {
-                        console.warn("⚠ SSL cert files not set in config, ignoring SSL...")
+                        console.warn("⚠ SSL cert files not set in config or unavailable, ignoring SSL...")
                         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
                     }
                 }
 

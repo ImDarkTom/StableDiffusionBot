@@ -9,36 +9,23 @@
         "defaultSteps": 20,
         "defaultUpscalerIndex": 5
     },
-    "cfg_choices": [
-        {
-            "name": "Default",
-            "value": 7,
-            "default": true
-        },
-        {
-            "name": "High",
-            "value": 4
-        },
-        {
-            "name": "Low",
-            "value": 10
-        }
-    ],
-    "steps_choices": [
-        {
-            "name": "Default",
-            "value": 20,
-            "default": true
-        },
-        {
-            "name": "Enhanced",
-            "value": 35
-        },
-        {
-            "name": "High",
-            "value": 50
-        }
-    ],
+    "presets": {
+        "performance": [
+            {
+                "name": "Speed",
+                "value": "30,DPM++ 2M Karras,7",
+                "default": true
+            },
+            {
+                "name": "Quality",
+                "value": "60,DPM++ 2M Karras,7"
+            },
+            {
+                "name": "Extreme Speed",
+                "value": "10,DDIM,8"
+            }
+        ]
+    },
     "upscalers": [
         {
             "name": "Lanczos",
@@ -59,8 +46,7 @@
         },
         {
             "name": "R-ESRGAN_4x+",
-            "value": 5,
-            "default": true
+            "value": 5
         },
         {
             "name": "R-ESRGAN 4x+ Anime6B",
@@ -80,7 +66,6 @@
         }
     ],
     "extensionConfigs": {
-
         "controlnet": {
             "enabled": false,
             "controlnetModels": [
@@ -102,7 +87,6 @@
                 }
             ]
         },
-
         "autoTlsHttps": {
             "enabled": false,
             "certFilePath": "path/to/webui.cert",

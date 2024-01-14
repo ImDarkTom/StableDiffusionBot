@@ -10,24 +10,79 @@ module.exports = {
     // testOnly: Boolean,
     options: [
         {
-            name: 'prompt',
-            description: 'What to generate.',
-            required: true,
-            type: ApplicationCommandOptionType.String,
+            name: 'basic',
+            description: 'Generate an image.',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'prompt',
+                    description: 'What to generate.',
+                    required: true,
+                    type: ApplicationCommandOptionType.String,
+                },
+                {
+                    name: 'performance',
+                    description: "What generation performance should be focused on.",
+                    required: true,
+                    type: ApplicationCommandOptionType.String,
+                    choices: sdConfig.presets.performance
+                }
+            ]
         },
         {
-            name: 'steps',
-            description: "How much time to spend generating.",
-            required: false,
-            type: ApplicationCommandOptionType.Integer,
-            choices: sdConfig.steps_choices
-        },
-        {
-            name: 'cfg',
-            description: "How close the image should be to the prompt.",
-            required: false,
-            type: ApplicationCommandOptionType.Integer,
-            choices: sdConfig.cfg_choices
+            name: 'advanced',
+            description: 'Fine-tune the generation parameters.',
+            type: ApplicationCommandOptionType.Subcommand,
+            options: [
+                {
+                    name: 'prompt',
+                    description: 'What to generate.',
+                    required: true,
+                    type: ApplicationCommandOptionType.String
+                },
+                {
+                    name: 'negative_prompt',
+                    description: "What to avoid generating.",
+                    required: false,
+                    type: ApplicationCommandOptionType.String
+                },
+                {
+                    name: 'seed',
+                    description: "Used to randomise images. Using the same seed multiple times gives same results.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
+                },
+                {
+                    name: 'width',
+                    description: "Image width.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
+                },
+                {
+                    name: 'height',
+                    description: "Image height.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
+                },
+                {
+                    name: 'steps',
+                    description: "Number of sampling steps for the denoising process. More gives higher quality but also takes longer.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
+                },
+                {
+                    name: 'cfg_scale',
+                    description: "How much the model should stick to your prompt. Less = more creative, more = strictly follow prompt.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
+                },
+                {
+                    name: 'sampler_name',
+                    description: "Algorithm for the denoising process. Must be full name such as DPM++ 2M Karras, Euler a, DDIM, etc.",
+                    required: false,
+                    type: ApplicationCommandOptionType.String
+                }
+            ]
         }
     ],
 
@@ -37,19 +92,52 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction 
      */
     callback: async (_client, interaction) => {
-        await generateImage(
-            'sdapi/v1/txt2img',
-            {
-                prompt: interaction.options.get('prompt').value,
-                negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
-                steps: interaction.options.get('steps')?.value || sdConfig.generationDefaults.defaultSteps,
-                cfg_scale: interaction.options.get('cfg')?.value || sdConfig.generationDefaults.defaultCfg
-            },
-            interaction, 
-            {
-                upscaleBtn: true,
-                redoBtn: true
-            }
-        );
-    },
+        const commandOptions = interaction.options;
+        const getCommandOption = (key) => commandOptions.get(key)?.value;
+
+        const prompt = getCommandOption('prompt'); //Universally used
+
+        const subcommand = commandOptions.getSubcommand();
+
+        if (subcommand == "basic") {
+            const performance_setting = getCommandOption('performance');
+            const [preset_steps, preset_sampler, preset_cfg_scale] = performance_setting.split(',');
+
+            await generateImage(
+                'sdapi/v1/txt2img',
+                {
+                    prompt: prompt,
+                    negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
+                    steps: preset_steps,
+                    cfg_scale: preset_cfg_scale,
+                    sampler_name: preset_sampler
+                },
+                interaction, 
+                {
+                    upscaleBtn: true,
+                    redoBtn: true
+                }
+            );
+        } else {
+            //Advanced
+            await generateImage(
+                'sdapi/v1/txt2img',
+                {
+                    prompt: prompt,
+                    negative_prompt: getCommandOption('negative_prompt'),
+                    seed: getCommandOption('seed'),
+                    width: getCommandOption('width'),
+                    height: getCommandOption('height'),
+                    steps: getCommandOption('steps'),
+                    cfg_scale: getCommandOption('cfg_scale'),
+                    sampler_name: getCommandOption('sampler_name')
+                },
+                interaction, 
+                {
+                    upscaleBtn: true,
+                    redoBtn: true
+                }
+            );
+        }
+    }
 };
