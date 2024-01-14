@@ -47,7 +47,7 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
             },
             {
                 name: "Negative Prompt",
-                value: imageParams.negative_prompt.toString(),
+                value: imageParams.negative_prompt.toString() || " ",
                 inline: true
             }
         ])
