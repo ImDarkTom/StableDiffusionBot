@@ -1,7 +1,7 @@
-const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, User } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, User } = require("discord.js");
 const sendRequest = require("./sendRequest");
 const botConfig = require('../../../botConfig.json');
-const base64ToBuffer = require("./base64ToBuffer");
+const base64ToAttachment = require("./base64ToAttachment");
 
 /**
  * 
@@ -40,16 +40,13 @@ module.exports = async (user, context = "", addCancelButton = true) => {
     const progressBarCompletion = Math.ceil(progress/10);
 
     const imagePreviewFormat = botConfig.generation.imagePreviewFormat;
-    const previewImageFilename = 'progress.' + imagePreviewFormat;
 
-    const imageBuffer = await base64ToBuffer(data.current_image, imagePreviewFormat);
-
-    const image = new AttachmentBuilder(imageBuffer, {name: previewImageFilename});
+    const image = await base64ToAttachment(data.current_image, imagePreviewFormat, "progress");
 
     const embed = new EmbedBuilder()
         .setTitle(`${context}${progress}%\n|${"▓".repeat(progressBarCompletion)}${"░".repeat(10 - progressBarCompletion)}|`)
         .setFooter({text: `ETA: ${data.eta_relative.toFixed(1)}s`})
-        .setImage(`attachment://${previewImageFilename}`)
+        .setImage(`attachment://progress.${imagePreviewFormat}`)
         .setColor("Yellow")
 
     if (botConfig.generation.showImageAuthor) { 

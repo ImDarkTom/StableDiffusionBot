@@ -26,6 +26,12 @@ module.exports = {
                     required: true,
                     type: ApplicationCommandOptionType.String,
                     choices: sdConfig.presets.performance
+                },
+                {
+                    name: 'batch_count',
+                    description: "How many images to generate.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
                 }
             ]
         },
@@ -81,6 +87,12 @@ module.exports = {
                     description: "Algorithm for the denoising process. Must be full name such as DPM++ 2M Karras, Euler a, DDIM, etc.",
                     required: false,
                     type: ApplicationCommandOptionType.String
+                },
+                {
+                    name: 'batch_count',
+                    description: "How many images to generate.",
+                    required: false,
+                    type: ApplicationCommandOptionType.Integer
                 }
             ]
         }
@@ -95,7 +107,13 @@ module.exports = {
         const commandOptions = interaction.options;
         const getCommandOption = (key) => commandOptions.get(key)?.value;
 
-        const prompt = getCommandOption('prompt'); //Universally used
+        //Universally used
+        const prompt = getCommandOption('prompt'); 
+        let batchCount = getCommandOption('batch_count');
+
+        if (batchCount < 1) {
+            batchCount = 1;
+        }
 
         const subcommand = commandOptions.getSubcommand();
 
@@ -110,7 +128,8 @@ module.exports = {
                     negative_prompt: sdConfig.generationDefaults.defaultNegativePrompt,
                     steps: preset_steps,
                     cfg_scale: preset_cfg_scale,
-                    sampler_name: preset_sampler
+                    sampler_name: preset_sampler,
+                    n_iter: batchCount
                 },
                 interaction, 
                 {
@@ -130,7 +149,8 @@ module.exports = {
                     height: getCommandOption('height'),
                     steps: getCommandOption('steps'),
                     cfg_scale: getCommandOption('cfg_scale'),
-                    sampler_name: getCommandOption('sampler_name')
+                    sampler_name: getCommandOption('sampler_name'),
+                    n_iter: batchCount
                 },
                 interaction, 
                 {

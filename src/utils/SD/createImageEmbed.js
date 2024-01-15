@@ -1,5 +1,5 @@
-const { EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, User } = require("discord.js");
-const base64ToBuffer = require("./base64ToBuffer");
+const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, User } = require("discord.js");
+const base64ToAttachment = require("./base64ToAttachment");
 const botConfig = require('../../../botConfig.json')
 
 
@@ -20,14 +20,13 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
     const [progressData, imageData] = data;
     const cancelled = progressData.state.interrupted;
 
-    const imageAttachment = new AttachmentBuilder(await base64ToBuffer(imageData.images[0]), {name: 'output.png', description: ""});
     const imageParams = JSON.parse(imageData.info); //imageData.parameters doesn't contain info such as seed or sampler_name.
 
     let embed = new EmbedBuilder()
         .addFields([
             {
-                name: "Seed",
-                value: imageParams.seed.toString(),
+                name: "Seed(s)",
+                value: imageParams.all_seeds.join(', ').toString(),
                 inline: true
             },
             {
@@ -51,13 +50,26 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
                 inline: true
             }
         ])
+        .setURL('http://data.notaurl/') // Will be later used to store imageParams to make imageDataFromEmbed better.
         .setTitle(`${cancelled ? "Cancelled - ": ""}${formattedAdditionalTitleText}"${imageParams.prompt}"`)
-        .setImage('attachment://output.png')
         .setFooter({ text: imageParams.infotexts[0].match(/Model: ([^,]+)/)[1] })
         .setColor(cancelled ? "#bb0000" : "#00bb00")
 
     if (botConfig.generation.showImageAuthor) { 
         embed.setAuthor({name: user.username, iconURL: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=256`}); 
+    }
+
+    const embedsList = [];
+    const attachmentsList = [];
+
+    for (const [index, imageBase64] of imageData.images.entries()) { //To get both item and index
+        const imageAttachment = await base64ToAttachment(imageBase64, "png", `output${index}`);
+
+        const clonedEmbed = new EmbedBuilder(embed.data);
+        clonedEmbed.setImage(`attachment://output${index}.png`)
+
+        embedsList.push(clonedEmbed);
+        attachmentsList.push(imageAttachment)
     }
     
     const row = new ActionRowBuilder()
@@ -89,5 +101,5 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
         row.addComponents(upscaleBtn);
     }
 
-    return {embeds: [embed], files: [imageAttachment], components: [row]};
+    return {embeds: embedsList, files: attachmentsList, components: [row]};
 };
