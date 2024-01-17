@@ -7,15 +7,16 @@ const { ChatInputCommandInteraction, ButtonInteraction } = require("discord.js")
  * 
  * @param {Promise} imagePromise Image to be generated promise.
  * @param {ChatInputCommandInteraction | ButtonInteraction} interaction "Waiting for SD..." message.
+ * @param {String} generatingText Text to show while generating. Default "Generating..."
  * @returns 
  */
-module.exports = async (imagePromise, interaction) => {
+module.exports = async (imagePromise, interaction, generatingText = "Generating...") => {
     let interval;
 
     if (botConfig.generation.progressUpdateIntervalMs !== -1) {
         interval = setInterval( async () => {
 
-            interaction.editReply(await getProgressEmbed(interaction.user, "Generating... ", true));
+            interaction.editReply(await getProgressEmbed(interaction.user, generatingText, true));
     
         }, botConfig.generation.progressUpdateIntervalMs);
     }

@@ -6,24 +6,14 @@ const base64ToAttachment = require("./base64ToAttachment");
 /**
  * 
  * @param {User} user 
- * @param {string} context Text to add alongside the progress embed.
+ * @param {string} generatingText Text to add alongside the progress embed.
  * @param {boolean} addCancelButton 
  * @returns {Promise<import("discord.js").MessagePayloadOption>}
  */
-module.exports = async (user, context = "", addCancelButton = true) => {
-    let data;
+module.exports = async (user, generatingText, addCancelButton = true) => {
+    const imageProgressData = await sendRequest('sdapi/v1/progress?skip_current_image=false', {}, "get");
 
-    while (true) {
-        data = await sendRequest('sdapi/v1/progress?skip_current_image=false', {}, "get");
-
-        if ("progress" in data) {
-            break;
-        } else {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second timeout
-        }
-    }
-
-    if (data.current_image == null) { // Make better later
+    if (imageProgressData.current_image == null) { // Make better later
         const embed = new EmbedBuilder()
             .setColor('Yellow')
             .setTitle('Starting...')
@@ -36,16 +26,16 @@ module.exports = async (user, context = "", addCancelButton = true) => {
     }
 
     //Embed
-    const progress = Math.round(data.progress*100);
+    const progress = Math.round(imageProgressData.progress*100);
     const progressBarCompletion = Math.ceil(progress/10);
 
     const imagePreviewFormat = botConfig.generation.imagePreviewFormat;
 
-    const image = await base64ToAttachment(data.current_image, imagePreviewFormat, "progress");
+    const image = await base64ToAttachment(imageProgressData.current_image, imagePreviewFormat, "progress");
 
     const embed = new EmbedBuilder()
-        .setTitle(`${context}${progress}%\n|${"▓".repeat(progressBarCompletion)}${"░".repeat(10 - progressBarCompletion)}|`)
-        .setFooter({text: `ETA: ${data.eta_relative.toFixed(1)}s`})
+        .setTitle(`${generatingText}${progress}%\n|${"▓".repeat(progressBarCompletion)}${"░".repeat(10 - progressBarCompletion)}|`)
+        .setFooter({text: `ETA: ${imageProgressData.eta_relative.toFixed(1)}s`})
         .setImage(`attachment://progress.${imagePreviewFormat}`)
         .setColor("Yellow")
 

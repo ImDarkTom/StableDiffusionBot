@@ -23,7 +23,8 @@ module.exports = {
             interaction,
             {
                 upscaleBtn: true,
-                redoBtn: true
+                redoBtn: true,
+                generatingText: "Redoing..."
             }
         );
     },

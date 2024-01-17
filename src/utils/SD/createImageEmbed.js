@@ -101,5 +101,5 @@ module.exports = async (data, settings = {upscaleBtn: true, redoBtn: false, addi
         row.addComponents(upscaleBtn);
     }
 
-    return {embeds: embedsList, files: attachmentsList, components: [row]};
+    return {content: "", embeds: embedsList, files: attachmentsList, components: [row]};
 };

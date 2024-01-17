@@ -60,7 +60,8 @@ module.exports = {
             {
                 upscaleBtn: false,
                 redoBtn: false,
-                additionalTitleText: `Upscaled to ${originalImageData.width*upscaleMultiplier}x${originalImageData.height*upscaleMultiplier} with upscaler value '${messageContent[1]}'`
+                additionalTitleText: `Upscaled to ${originalImageData.width*upscaleMultiplier}x${originalImageData.height*upscaleMultiplier} with upscaler value '${messageContent[1]}'`,
+                generatingText: "Upscaling..."
             }
         );
     },

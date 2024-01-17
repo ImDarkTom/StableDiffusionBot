@@ -16,7 +16,7 @@ module.exports = async (route, requestData, interaction, embedData) => {
 
     const imagePromise = sendRequest(route, requestData);
 
-    const progressFinish = await progressUpdater(imagePromise, interaction);
+    const progressFinish = await progressUpdater(imagePromise, interaction, embedData.generatingText);
 
     await interaction.editReply(await createImageEmbed(progressFinish, embedData, interaction.user));
 }
