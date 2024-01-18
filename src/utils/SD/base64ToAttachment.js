@@ -4,7 +4,7 @@ const sharp = require('sharp');
 /**
  * Turns a Base64 encoded image into an attachment.
  * @param {String} encodedString Base64 encoded image string.
- * @param {keyof sharp.FormatEnum} resultFormat The image format to return the buffer as, default png.
+ * @param {keyof sharp.FormatEnum|String} resultFormat The image format to return the buffer as, default png.
  * @param {String} filename The filename of the atachment, default is 'image'.
  * @returns {Promise<Attachment>}
  */

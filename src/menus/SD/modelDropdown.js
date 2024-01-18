@@ -1,6 +1,8 @@
-//@ts-check
-const { EmbedBuilder, Client, StringSelectMenuInteraction } = require('discord.js');
+const { EmbedBuilder, Client, StringSelectMenuInteraction, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const sendRequest = require('../../utils/SD/sendRequest');
+const { default:axios } = require('axios');
+const sharp = require('sharp');
+const sdConfig = require('../../../sdConfig.json');
 
 module.exports = {
     id: 'modelDropdown',
@@ -12,29 +14,63 @@ module.exports = {
      * @param {StringSelectMenuInteraction} interaction 
      */
     callback: async (_client, interaction) => {
-        const modelValue = interaction.values[0];
-        let embed;
+        const selectedModelName = interaction.values[0];
 
-        embed = new EmbedBuilder()
-            .setColor(0x7ba4d1)
-            .setTitle('Loading checkpoint...')
-            .setDescription(`Loading "**${modelValue}**". Please wait for the checkpoint to load.`)
+        const allModelsInfo = await sendRequest('sdapi/v1/sd-models', {}, "get");
+        const selectedModelInfo = allModelsInfo.filter((model) => model.model_name == selectedModelName)[0];
+        const modelFileName = selectedModelInfo.filename;
 
-        await interaction.reply({content: "", embeds: [embed]});
+        //Get model thumbnail
+        let thumbnailImageBuffer, thumbnailFileExtension;
+        const fileNameNoExt = modelFileName.substring(0, modelFileName.lastIndexOf('.'));
+        for (const fileExtension of ['png', 'jpg', 'jpeg', 'webp', 'gif']) {
+            const generatedImageFileName = `${fileNameNoExt}.${fileExtension}`;
+            const generatedUrl = `${sdConfig.baseUrl}:${sdConfig.port}/sd_extra_networks/thumb?filename=${generatedImageFileName}`;
 
-        interaction.message.delete();
+            try {
+                const response = await axios.get(generatedUrl, { responseType: 'arraybuffer'});
+        
+                if (response.status === 404) {
+                    continue;
+                }
+        
+                thumbnailImageBuffer = sharp(response.data);
+                thumbnailFileExtension = fileExtension;
+                break;
 
-        let options = await sendRequest('sdapi/v1/options', {}, "get");
+            } catch (error) {
+                if (!(error.response && error.response.status == 404)) {
+                    //If not 404
+                    console.error(`Error fetching ${generatedUrl}: ${error.message}`);
+                }
+            }
+        }
 
-        options["sd_model_checkpoint"] = modelValue;
+        if (thumbnailImageBuffer == undefined) {
+            const response = await axios.get(`${sdConfig.baseUrl}:${sdConfig.port}/file=html/card-no-preview.png`, { responseType: 'arraybuffer' });
 
-        await sendRequest('sdapi/v1/options', options, "post");
+            thumbnailImageBuffer = sharp(response.data);
+            thumbnailFileExtension = "png";
+        }
 
-        embed = new EmbedBuilder()
-            .setColor(0x82d17b)
-            .setTitle('Checkpoint loaded!')
-            .setDescription(`Checkpoint "**${modelValue}**" has successfully loaded.`)
+        const attachment = new AttachmentBuilder(thumbnailImageBuffer, {name: `thumbnail.${thumbnailFileExtension}`, description: ""});
 
-        await interaction.editReply({content: "", embeds: [embed]});
+        const embed = new EmbedBuilder()
+            .setTitle(selectedModelInfo.model_name)
+            .setDescription(selectedModelInfo.title)
+            .setThumbnail(`attachment://thumbnail.${thumbnailFileExtension}`)
+            .setColor('Aqua')
+
+        const buttonRow = new ActionRowBuilder();
+
+        const loadButton = new ButtonBuilder()
+            .setCustomId('loadCheckpoint')
+            .setLabel('Load Checkpoint')
+            .setEmoji('💾')
+            .setStyle(ButtonStyle.Primary)
+
+        buttonRow.addComponents(loadButton);
+
+        await interaction.reply({content: "", embeds: [embed], files: [attachment], components: [buttonRow] });
     },
 };
